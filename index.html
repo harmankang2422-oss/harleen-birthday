@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Birthday Surprise</title>
+<style>
+  @media (max-width: 600px) {
+  h1, p {
+    font-size: 1.2em;
+    margin: 10px;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    font-size: 1em;
+    margin: 10px;
+  }
+
+  #cake {
+    width: 90%;
+    max-width: 250px;
+  }
+
+  #finalMessage {
+    font-size: 1.2em;
+    padding: 10px 15px;
+    margin: 10px;
+  }
+
+  #balloons .balloon {
+    width: 35px;
+    height: 50px;
+  }
+}
+
+/* 🌟 BODY – Luxury Background */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  text-align: center;
+  position: relative;
+
+  background: radial-gradient(circle at center, #1a0f00 0%, #000 100%);
+  background-attachment: fixed;
+}
+
+/* ✨ Moving shimmer overlay (luxury effect) */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    130deg,
+    rgba(255, 215, 0, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 215, 0, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 75%,
+    rgba(255, 215, 0, 0.1) 100%
+  );
+  background-size: 400% 400%;
+  animation: moveGlow 15s linear infinite;
+  z-index: -2;
+}
+
+@keyframes moveGlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Floating sparkle particles */
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: gold;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: sparkleFloat 6s linear infinite;
+  z-index: -1;
+}
+
+@keyframes sparkleFloat {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0.5;
+  }
+}
+
+/* Text */
+h1, p {
+  margin: 20px;
+  color: gold;
+  text-shadow: 0 0 10px rgba(255,215,0,0.6);
+}
+
+/* Buttons */
+.btn {
+  padding: 15px 30px;
+  margin: 15px;
+  font-size: 1.2em;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  opacity: 0;
+  transform: scale(0.5) translateY(-50px);
+  transition: all 0.5s ease;
+}
+
+.btn.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px gold;
+}
+
+#yesBtn { background-color: #4caf50; color: white; }
+#noBtn { background-color: #f44336; color: white; }
+#lightsBtn { background-color: #ffcc00; color: #222; }
+#playMusicBtn { background-color: #00ccff; color: #222; }
+#cutCakeBtn { background-color: #ff66b3; color: #222; }
+
+/* ✨ Luxury gold style for message button */
+#messageBtn {
+  background: linear-gradient(135deg, #d4af37, #f5deb3, #ffd700);
+  color: #3b1c00;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+  border: 2px solid #b8860b;
+  box-shadow: 0 0 25px rgba(255, 223, 0, 0.8),
+              inset 0 0 10px rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  transition: all 0.4s ease;
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+#messageBtn:hover {
+  background: linear-gradient(135deg, #fff8dc, #ffeb99, #ffd700);
+  transform: scale(1.1);
+  box-shadow: 0 0 35px rgba(255, 223, 0, 1),
+              inset 0 0 12px rgba(255, 255, 255, 0.8);
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.hidden { display: none; }
+
+/* Balloons, Confetti, Cake etc (same as before) */
+.balloon {
+  width: 50px; height: 70px; border-radius: 50%;
+  position: absolute; bottom: -100px; animation: floatUp 8s infinite ease-in-out;
+  cursor: pointer; transform-origin: bottom center; opacity: 0;
+  transition: transform 0.5s, opacity 0.5s;
+}
+@keyframes floatUp {
+  0% { bottom: -100px; transform: rotate(0deg); opacity: 0; }
+  20% { opacity: 1; } 50% { transform: rotate(10deg); }
+  100% { bottom: 100%; transform: rotate(-10deg); }
+}
+.confetti-piece {
+  width: 10px; height: 10px; position: absolute; opacity: 0.9;
+  animation: confettiFall 3s linear infinite;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-10px) rotate(0deg); }
+  100% { transform: translateY(100vh) rotate(360deg); }
+}
+#cake {
+  width: 300px; margin-top: 15px; opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+#finalMessage {
+  font-size: 1.6em; color: blue; opacity: 0; transform: translateY(20px);
+  transition: opacity 1s, transform 1s; margin: 0 auto; padding: 15px 25px;
+  border: 2px solid #6b0033; width: fit-content;
+  background: rgba(107, 0, 51, 0.15); border-radius: 10px;
+  transform-style: preserve-3d; perspective: 600px;
+  animation: rotateInBox 3s forwards; white-space: pre-line;
+}
+@keyframes rotateInBox {
+  0% { opacity: 0; transform: translateY(20px) rotateY(0deg) scale(0.7); }
+  100% { opacity: 1; transform: translateY(0) rotateY(360deg) scale(1); }
+}
+@keyframes appearRotateGlow {
+  0% { opacity: 0; transform: scale(0) rotateX(0deg); text-shadow: 0 0 0px gold; }
+  50% { opacity: 1; transform: scale(1.1) rotateX(180deg); text-shadow: 0 0 10px gold; }
+  100% { opacity: 1; transform: scale(1) rotateX(360deg); text-shadow: 0 0 20px gold; }
+}
+</style>
+</head>
+<body>
+
+<!-- floating sparkles -->
+<script>
+for (let i = 0; i < 40; i++) {
+  const sp = document.createElement('div');
+  sp.classList.add('sparkle');
+  sp.style.left = Math.random() * 100 + '%';
+  sp.style.top = Math.random() * 100 + '%';
+  sp.style.animationDelay = Math.random() * 5 + 's';
+  sp.style.animationDuration = 3 + Math.random() * 3 + 's';
+  document.body.appendChild(sp);
+}
+</script>
+
+<!-- Your main structure (same) -->
+<div id="step1">
+  <h1>It's a Special Day!</h1>
+  <p>Do you want to see what I made?</p>
+  <button id="yesBtn" class="btn">Yes</button>
+  <button id="noBtn" class="btn">No</button>
+</div>
+
+<div id="step2" class="hidden">
+  <p>look Madam Ji ✨</p>
+  <button id="lightsBtn" class="btn">Lights On</button>
+</div>
+
+<div id="step3" class="hidden">
+  <button id="playMusicBtn" class="btn">Play Music</button>
+</div>
+
+<div id="step4" class="hidden">
+  <button id="cutCakeBtn" class="btn">Cut the Cake</button>
+  <div id="cakeContainer"></div>
+</div>
+
+<div id="step5" class="hidden">
+  <button id="messageBtn" class="btn">I have a message for you Madam Ji</button>
+  <h1 id="finalMessage" class="hidden"></h1>
+</div>
+
+<div id="balloons" class="hidden">
+  <div class="balloon"></div><div class="balloon"></div>
+  <div class="balloon"></div><div class="balloon"></div>
+  <div class="balloon"></div><div class="balloon"></div>
+  <div class="balloon"></div><div class="balloon"></div>
+</div>
+
+<div id="confetti"></div>
+
+<audio id="music" loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg" />
+</audio>
+
+<script>
+function showButtonUnique(btn, delay = 0) {
+  setTimeout(() => btn.classList.add('show'), delay);
+}
+const step1 = document.getElementById('step1');
+const step2 = document.getElementById('step2');
+const step3 = document.getElementById('step3');
+const step4 = document.getElementById('step4');
+const step5 = document.getElementById('step5');
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+const lightsBtn = document.getElementById('lightsBtn');
+const playMusicBtn = document.getElementById('playMusicBtn');
+const cutCakeBtn = document.getElementById('cutCakeBtn');
+const messageBtn = document.getElementById('messageBtn');
+const music = document.getElementById('music');
+const balloons = document.getElementById('balloons');
+const confettiContainer = document.getElementById('confetti');
+const cakeContainer = document.getElementById('cakeContainer');
+const finalMessage = document.getElementById('finalMessage');
+showButtonUnique(yesBtn, 300);
+showButtonUnique(noBtn, 600);
+yesBtn.addEventListener('click', () => {
+  step1.classList.add('hidden');
+  step2.classList.remove('hidden');
+  showButtonUnique(lightsBtn, 300);
+});
+noBtn.addEventListener('click', () => alert("No worries! Have a wonderful day! 🎉"));
+lightsBtn.addEventListener('click', () => {
+  step2.classList.add('hidden');
+  step3.classList.remove('hidden');
+  balloons.classList.remove('hidden');
+  balloons.querySelectorAll('.balloon').forEach(b => (b.style.opacity = '1'));
+  generateConfetti();
+  showButtonUnique(playMusicBtn, 300);
+});
+playMusicBtn.addEventListener('click', () => {
+  music.play();
+  step3.classList.add('hidden');
+  step4.classList.remove('hidden');
+  showButtonUnique(cutCakeBtn, 300);
+  showCakeImmediately();
+});
+function showCakeImmediately() {
+  if (!document.getElementById('cake')) {
+    const cakeImg = document.createElement('img');
+    cakeImg.src = 'https://images.unsplash.com/photo-1674754914592-a2d48af7d9ec?w=600&auto=format&fit=crop&q=60';
+    cakeImg.id = 'cake';
+    cakeContainer.appendChild(cakeImg);
+    setTimeout(() => { cakeImg.style.opacity = '1'; }, 100);
+  }
+}
+cutCakeBtn.addEventListener('click', () => {
+  step4.classList.add('hidden');
+  step5.classList.remove('hidden');
+  showButtonUnique(messageBtn, 300);
+});
+function typeMessage(element, text, speed, callback) {
+  element.innerHTML = '';
+  element.style.opacity = '1';
+  let i = 0;
+  function type() {
+    if (i < text.length) {
+      if (text.substring(i, i + 4) === '<br>') {
+        element.innerHTML += '<br>';
+        i += 4;
+      } else {
+        element.innerHTML += text.charAt(i);
+        i++;
+      }
+      setTimeout(type, speed);
+    } else {
+      if (callback) callback();
+    }
+  }
+  type();
+}
+messageBtn.addEventListener('click', () => {
+  finalMessage.classList.remove('hidden');
+  typeMessage(
+    finalMessage,
+    `On this day the stars align 🥹💕<br>
+    To bless ur soul so pure, divine 🫶🏻💗<br>
+    My heart is yours, today and always 🥹<br>
+    A love that grows through endless days 🫠💕`,
+    50,
+    () => { showBirthdayLizardMessage(); }
+  );
+  messageBtn.classList.add('hidden');
+});
+balloons.querySelectorAll('.balloon').forEach(balloon => {
+  balloon.addEventListener('click', () => {
+    balloon.style.transition = '0.5s';
+    balloon.style.transform = 'scale(0)';
+    balloon.style.opacity = '0';
+  });
+});
+function generateConfetti() {
+  for (let i = 0; i < 50; i++) {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti-piece');
+    confetti.style.backgroundColor = `hsl(${Math.random() * 360},70%,60%)`;
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.animationDelay = Math.random() * 3 + 's';
+    confettiContainer.appendChild(confetti);
+  }
+}
+function showBirthdayLizardMessage() {
+  const lizardMessage = document.createElement('div');
+  lizardMessage.textContent = "Happy Birthday Harleen 💖";
+  lizardMessage.style.fontSize = '3em';
+  lizardMessage.style.color = '#6b0033';
+  lizardMessage.style.fontWeight = '900';
+  lizardMessage.style.marginTop = '30px';
+  lizardMessage.style.textAlign = 'center';
+  lizardMessage.style.animation = 'appearRotateGlow 6s forwards ease-in-out';
+  lizardMessage.style.filter = 'drop-shadow(0 0 12px #ff99cc)';
+  finalMessage.parentNode.appendChild(lizardMessage);
+}
+</script>
+</body>
+</html>
